@@ -44,6 +44,9 @@ public class HomeScreen {
         // Set the background color to black
         mainPanel.setBackground(Color.BLACK);
 
+        // Set Green Color based on VR Logo
+        Color vrGreen = new Color(2, 175, 116);
+        
         // Create a horizontal box to hold the layout
         Box homeBox = Box.createHorizontalBox();
         homeBox.setAlignmentX(Component.CENTER_ALIGNMENT); // Center horizontally
@@ -56,8 +59,8 @@ public class HomeScreen {
 
         // Create a sub-menu box with specified dimensions and a white border
         Box subMenuBox = Box.createHorizontalBox();
-        subMenuBox.setPreferredSize(new Dimension(1200, 720));
-        subMenuBox.setMaximumSize(new Dimension(1200, 720));
+        subMenuBox.setPreferredSize(new Dimension(1200, 685));
+        subMenuBox.setMaximumSize(new Dimension(1200, 685));
         subMenuBox.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         subMenuBox.setAlignmentX(Component.CENTER_ALIGNMENT); // Center horizontally
         subMenuBox.setAlignmentY(Component.TOP_ALIGNMENT); // Align to the top
@@ -94,47 +97,68 @@ public class HomeScreen {
         logoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         menuBox.add(Box.createRigidArea(new Dimension(0, 5)));
         menuBox.add(logoLabel);
-        menuBox.add(Box.createRigidArea(new Dimension(0, 50)));  
+        menuBox.add(Box.createRigidArea(new Dimension(0, 5)));  
 
         // Create a title box with information and add it to the menu
         Box titleBox = Box.createVerticalBox();
         titleBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        titleBox.add(GUI.text("MRP System", 200, 30, 26, Color.WHITE, "left")); // Title
-        titleBox.add(Box.createRigidArea(new Dimension(0, 50)));
+        titleBox.add(GUI.text("MRP System", 200, 30, 20, Color.WHITE, "left")); // Title
+        titleBox.add(Box.createRigidArea(new Dimension(0, 25)));
         menuBox.add(titleBox);
 
         // Create navigation buttons for sections
         Box buttons = Box.createVerticalBox();
         buttons.setAlignmentX(Component.LEFT_ALIGNMENT);
+        Dimension buttonSize = new Dimension(200, 60);
 
+        JPanel updateStockBox = new JPanel();
+        updateStockBox.setPreferredSize(buttonSize);
+        updateStockBox.setMaximumSize(buttonSize);
+        updateStockBox.setBackground(vrGreen);
+        updateStockBox.setForeground(vrGreen);
         JButton updateStockButton = GUI.button("Update Stock", 200, 50, 20);
-        updateStockButton.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        updateStockButton.setForeground(Color.GREEN);
-        updateStockButton.setBackground(Color.GREEN);
+        updateStockButton.setBorder(BorderFactory.createLineBorder(vrGreen));
+        updateStockButton.setForeground(Color.WHITE);
+        updateStockBox.add(updateStockButton);
 
+        JPanel stockReportBox = new JPanel();
+        stockReportBox.setPreferredSize(buttonSize);
+        stockReportBox.setMaximumSize(buttonSize);
+        stockReportBox.setBackground(vrGreen);
+        stockReportBox.setForeground(vrGreen);
         JButton stockReportButton = GUI.button("Stock Report", 200, 50, 20);
-        stockReportButton.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        stockReportButton.setForeground(Color.GREEN);
-        stockReportButton.setBackground(Color.GREEN);
+        stockReportButton.setBorder(BorderFactory.createLineBorder(vrGreen));
+        stockReportButton.setForeground(Color.WHITE);
+        stockReportBox.add(stockReportButton);
 
+        JPanel bundleBox = new JPanel();
+        bundleBox.setPreferredSize(buttonSize);
+        bundleBox.setMaximumSize(buttonSize);
+        bundleBox.setBackground(vrGreen);
+        bundleBox.setForeground(vrGreen);
         JButton bundleButton = GUI.button("Bundle", 200, 50, 20);
-        bundleButton.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        bundleButton.setForeground(Color.GREEN);
-        bundleButton.setBackground(Color.GREEN);
+        bundleButton.setBorder(BorderFactory.createLineBorder(vrGreen));
+        bundleButton.setForeground(Color.WHITE);
+        bundleBox.add(bundleButton);
 
+        JPanel demandAnalysisBox = new JPanel();
+        demandAnalysisBox.setPreferredSize(buttonSize);
+        demandAnalysisBox.setMaximumSize(buttonSize);
+        demandAnalysisBox.setBackground(vrGreen);
+        demandAnalysisBox.setForeground(vrGreen);
         JButton demandAnalysisButton = GUI.button("Demand Analysis", 200, 50, 20);
-        demandAnalysisButton.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        demandAnalysisButton.setForeground(Color.GREEN);
-        demandAnalysisButton.setBackground(Color.GREEN);
+        demandAnalysisButton.setBorder(BorderFactory.createLineBorder(vrGreen));
+        demandAnalysisButton.setForeground(Color.WHITE);
+        demandAnalysisBox.add(demandAnalysisButton);
 
         // Add buttons with spacing
-        buttons.add(updateStockButton);
+        buttons.add(updateStockBox);
         buttons.add(Box.createRigidArea(new Dimension(0, 20)));
-        buttons.add(stockReportButton);
+        buttons.add(stockReportBox);
         buttons.add(Box.createRigidArea(new Dimension(0, 20)));
-        buttons.add(bundleButton);
+        buttons.add(bundleBox);
         buttons.add(Box.createRigidArea(new Dimension(0, 20)));
-        buttons.add(demandAnalysisButton);
+        buttons.add(demandAnalysisBox);
         menuBox.add(buttons);
 
         // Create and initialize various sub-panels
