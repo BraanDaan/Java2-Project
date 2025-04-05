@@ -13,8 +13,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -73,7 +75,6 @@ public class UpdateStock {
         titleBox.add(GUI.text("Update Stock", 400, 30, 26, Color.BLACK, "center"));
         titleBox.add(Box.createRigidArea(new Dimension(0,75)));
         panel.add(titleBox);
-        panel.add(Box.createRigidArea(new Dimension(0,25)));
 
         // create sku combo box from the newly declared array
         panel.add(Box.createRigidArea(new Dimension(0,20)));
@@ -84,11 +85,11 @@ public class UpdateStock {
         skuOptionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         GUI.setDimension(skuOptionLabel, 350,30);
         skuOptionBox.add(skuOptionLabel);
-        // skuOptionBox.add(Box.createRigidArea(new Dimension(20,0)));
+        // skuOptionBox.add(Box.createRigidArea(new Dimension(70,0)));
         JComboBox<String> skuOption = new JComboBox<>(skuOptions); 
-        GUI.setDimension(skuOption, 150, 30);            
+        GUI.setDimension(skuOption, 350, 30);            
         skuOption.setFont(new Font("Sans-Serif", Font.BOLD, 20));
-        // skuOption.setAlignmentX(Component.CENTER_ALIGNMENT);     
+        skuOption.setAlignmentX(Component.CENTER_ALIGNMENT);     
         skuOptionBox.add(skuOption);
         panel.add(skuOptionBox);
         
@@ -133,9 +134,32 @@ public class UpdateStock {
         stockBox.add(partStock);
         panel.add(stockBox);
 
+        panel.add(Box.createRigidArea(new Dimension(0,40)));
+        JPanel updateBox = new JPanel();
+        updateBox.setPreferredSize(new Dimension(200, 60));
+        updateBox.setMaximumSize(new Dimension(200, 60));
+        updateBox.setBackground(GUI.vrGreen);
+        updateBox.setForeground(GUI.vrGreen);
+        JButton updateButton = GUI.button("Update", 200, 50, 20);
+        updateButton.setBorder(BorderFactory.createLineBorder(GUI.vrGreen));
+        updateButton.setForeground(Color.WHITE);
+        updateBox.add(updateButton);
+        panel.add(updateBox);
+
+        panel.add(Box.createRigidArea(new Dimension(0,20)));
+        Box statusBox = Box.createHorizontalBox();
+        statusBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+        statusBox.setAlignmentY(Component.TOP_ALIGNMENT);
+        JLabel statusText = new JLabel("");
+        statusText.setAlignmentX(Component.CENTER_ALIGNMENT);
+        statusBox.add(statusText);
+        panel.add(statusBox);
+
         skuOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                statusText.setText("");
+                statusText.setForeground(Color.BLACK);
                 try
                 (
                     Connection connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\branm\\OneDrive\\College\\Bushnell2024-2025\\Spring\\SFTE212\\project_repos\\brandon\\Java2-Project\\VR-Factory.db");
@@ -154,6 +178,34 @@ public class UpdateStock {
                 catch(SQLException f)
                 {
                     f.printStackTrace(System.err);
+                }
+            }
+        });
+        
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try
+                (
+                    Connection connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\branm\\OneDrive\\College\\Bushnell2024-2025\\Spring\\SFTE212\\project_repos\\brandon\\Java2-Project\\VR-Factory.db");
+                    Statement statement = connection.createStatement();
+                )
+                {
+                    String query = ("UPDATE part SET price='" + partPrice.getText() + "', stock='" + partStock.getText() + "' WHERE sku='" + skuOption.getItemAt(skuOption.getSelectedIndex()) + "';");
+                    System.out.println(query);
+                    statement.executeUpdate(query);
+                    // while(rs.next())
+                    // {
+                    //     statusText.setText("Updating Stock, please wait...");
+                    // }
+                    statusText.setForeground(Color.GREEN);
+                    statusText.setText("Update Successful!");
+                }
+                catch(SQLException f)
+                {
+                    f.printStackTrace(System.err);
+                    statusText.setForeground(Color.RED);
+                    statusText.setText("Update failed.");
                 }
             }
         });
