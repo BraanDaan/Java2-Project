@@ -18,6 +18,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.bushnell.GUI;
 
@@ -95,18 +96,43 @@ public class UpdateStock {
         Box descriptionBox = Box.createHorizontalBox();
         descriptionBox.setAlignmentX(Component.CENTER_ALIGNMENT);
         descriptionBox.setAlignmentY(Component.TOP_ALIGNMENT);
-        JLabel discriptionLabel = GUI.text("description", 10, 30, 20, Color.BLACK, "left");
-        discriptionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        GUI.setDimension(discriptionLabel, 350,30);
-        descriptionBox.add(discriptionLabel);
-
+        JLabel descriptionLabel = GUI.text("description", 10, 30, 20, Color.BLACK, "left");
+        descriptionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        GUI.setDimension(descriptionLabel, 350,30);
+        descriptionBox.add(descriptionLabel);
         JLabel partDescription = new JLabel("");
         partDescription.setFont(new Font("Sans-Serif", Font.BOLD, 20));
         partDescription.setAlignmentX(Component.LEFT_ALIGNMENT);
         GUI.setDimension(partDescription, 350, 30);
         descriptionBox.add(partDescription);
         panel.add(descriptionBox);
-        
+
+        panel.add(Box.createRigidArea(new Dimension(0,20)));
+        Box priceBox = Box.createHorizontalBox();
+        priceBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+        priceBox.setAlignmentY(Component.TOP_ALIGNMENT);
+        JLabel priceLabel = GUI.text("price", 10, 30, 20, Color.BLACK, "left");
+        priceLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        GUI.setDimension(priceLabel, 350,30);
+        priceBox.add(priceLabel);        
+        JTextField partPrice = new JTextField("");
+        GUI.setDimension(partPrice, 350,30);
+        priceBox.add(partPrice);
+        panel.add(priceBox);
+
+        panel.add(Box.createRigidArea(new Dimension(0,20)));
+        Box stockBox = Box.createHorizontalBox();
+        stockBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+        stockBox.setAlignmentY(Component.TOP_ALIGNMENT);
+        JLabel stockLabel = GUI.text("stock", 10, 30, 20, Color.BLACK, "left");
+        stockLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        GUI.setDimension(stockLabel, 350,30);
+        stockBox.add(stockLabel);
+        JTextField partStock = new JTextField("");
+        GUI.setDimension(partStock, 350,30);
+        stockBox.add(partStock);
+        panel.add(stockBox);
+
         skuOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -121,6 +147,8 @@ public class UpdateStock {
                     while(rs.next())
                     {
                         partDescription.setText(rs.getString("description"));
+                        partPrice.setText(rs.getString("price"));
+                        partStock.setText(rs.getString("stock"));
                     }
                 }
                 catch(SQLException f)
