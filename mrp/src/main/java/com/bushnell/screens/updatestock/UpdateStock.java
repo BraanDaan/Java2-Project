@@ -26,6 +26,10 @@ import com.bushnell.GUI;
 
 public class UpdateStock {
     public static JPanel MakeGUI(JPanel cardPanel) {
+        
+        // You will need to change this address so that java.sql can locate the database.
+        String databaseLocation = "jdbc:sqlite:C:\\Users\\branm\\OneDrive\\College\\Bushnell2024-2025\\Spring\\SFTE212\\project_repos\\brandon\\Java2-Project\\VR-Factory.db";
+
         // Register the JDBC Driver
         try {
             Class.forName("org.sqlite.JDBC");
@@ -37,7 +41,7 @@ public class UpdateStock {
         ArrayList<String> skuTemp = new ArrayList<String>();
         try
         (
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\branm\\OneDrive\\College\\Bushnell2024-2025\\Spring\\SFTE212\\project_repos\\brandon\\Java2-Project\\VR-Factory.db");
+            Connection connection = DriverManager.getConnection(databaseLocation);
             Statement statement = connection.createStatement();
         )
         {
@@ -76,7 +80,7 @@ public class UpdateStock {
         titleBox.add(Box.createRigidArea(new Dimension(0,75)));
         panel.add(titleBox);
 
-        // create sku combo box from the newly declared array
+        // create sku ComboBox from the newly declared array
         panel.add(Box.createRigidArea(new Dimension(0,20)));
         Box skuOptionBox = Box.createHorizontalBox();
         skuOptionBox.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -85,7 +89,6 @@ public class UpdateStock {
         skuOptionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         GUI.setDimension(skuOptionLabel, 350,30);
         skuOptionBox.add(skuOptionLabel);
-        // skuOptionBox.add(Box.createRigidArea(new Dimension(70,0)));
         JComboBox<String> skuOption = new JComboBox<>(skuOptions); 
         GUI.setDimension(skuOption, 350, 30);            
         skuOption.setFont(new Font("Sans-Serif", Font.BOLD, 20));
@@ -93,6 +96,7 @@ public class UpdateStock {
         skuOptionBox.add(skuOption);
         panel.add(skuOptionBox);
         
+        // The discription of the part given the sku
         panel.add(Box.createRigidArea(new Dimension(0,20)));
         Box descriptionBox = Box.createHorizontalBox();
         descriptionBox.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -108,6 +112,7 @@ public class UpdateStock {
         descriptionBox.add(partDescription);
         panel.add(descriptionBox);
 
+        // The price of the part given the sku
         panel.add(Box.createRigidArea(new Dimension(0,20)));
         Box priceBox = Box.createHorizontalBox();
         priceBox.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -121,6 +126,7 @@ public class UpdateStock {
         priceBox.add(partPrice);
         panel.add(priceBox);
 
+        // The stock of the part given the sku
         panel.add(Box.createRigidArea(new Dimension(0,20)));
         Box stockBox = Box.createHorizontalBox();
         stockBox.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -134,6 +140,7 @@ public class UpdateStock {
         stockBox.add(partStock);
         panel.add(stockBox);
 
+        // An update button that will execute a UPDATE command when pressed
         panel.add(Box.createRigidArea(new Dimension(0,40)));
         JPanel updateBox = new JPanel();
         updateBox.setPreferredSize(new Dimension(200, 60));
@@ -146,6 +153,7 @@ public class UpdateStock {
         updateBox.add(updateButton);
         panel.add(updateBox);
 
+        // This is status text that is hidden by default, but will change based on whether or not the UPDATE was successful or not.
         panel.add(Box.createRigidArea(new Dimension(0,20)));
         Box statusBox = Box.createHorizontalBox();
         statusBox.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -155,6 +163,7 @@ public class UpdateStock {
         statusBox.add(statusText);
         panel.add(statusBox);
 
+        // Change the discription JLabel, the price JTextField, and the stock JTextField to the values given by the SELECT query executed.
         skuOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -162,7 +171,7 @@ public class UpdateStock {
                 statusText.setForeground(Color.BLACK);
                 try
                 (
-                    Connection connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\branm\\OneDrive\\College\\Bushnell2024-2025\\Spring\\SFTE212\\project_repos\\brandon\\Java2-Project\\VR-Factory.db");
+                    Connection connection = DriverManager.getConnection(databaseLocation);
                     Statement statement = connection.createStatement();
                 )
                 {
@@ -182,22 +191,19 @@ public class UpdateStock {
             }
         });
         
+        // Execute an UPDATE to change the price and stock of a part given its sku and the values left on the respective JTextFields.
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try
                 (
-                    Connection connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\branm\\OneDrive\\College\\Bushnell2024-2025\\Spring\\SFTE212\\project_repos\\brandon\\Java2-Project\\VR-Factory.db");
+                    Connection connection = DriverManager.getConnection(databaseLocation);
                     Statement statement = connection.createStatement();
                 )
                 {
                     String query = ("UPDATE part SET price='" + partPrice.getText() + "', stock='" + partStock.getText() + "' WHERE sku='" + skuOption.getItemAt(skuOption.getSelectedIndex()) + "';");
                     System.out.println(query);
                     statement.executeUpdate(query);
-                    // while(rs.next())
-                    // {
-                    //     statusText.setText("Updating Stock, please wait...");
-                    // }
                     statusText.setForeground(Color.GREEN);
                     statusText.setText("Update Successful!");
                 }
