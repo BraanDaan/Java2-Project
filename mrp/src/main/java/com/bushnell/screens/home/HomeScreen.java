@@ -44,9 +44,6 @@ public class HomeScreen {
         // Set the background color to black
         mainPanel.setBackground(Color.BLACK);
 
-        // Set Green Color based on VR Logo
-        Color vrGreen = new Color(2, 175, 116);
-        
         // Create a horizontal box to hold the layout
         Box homeBox = Box.createHorizontalBox();
         homeBox.setAlignmentX(Component.CENTER_ALIGNMENT); // Center horizontally
@@ -114,40 +111,40 @@ public class HomeScreen {
         JPanel updateStockBox = new JPanel();
         updateStockBox.setPreferredSize(buttonSize);
         updateStockBox.setMaximumSize(buttonSize);
-        updateStockBox.setBackground(vrGreen);
-        updateStockBox.setForeground(vrGreen);
+        updateStockBox.setBackground(GUI.vrGreen);
+        updateStockBox.setForeground(GUI.vrGreen);
         JButton updateStockButton = GUI.button("Update Stock", 200, 50, 20);
-        updateStockButton.setBorder(BorderFactory.createLineBorder(vrGreen));
+        updateStockButton.setBorder(BorderFactory.createLineBorder(GUI.vrGreen));
         updateStockButton.setForeground(Color.WHITE);
         updateStockBox.add(updateStockButton);
 
         JPanel stockReportBox = new JPanel();
         stockReportBox.setPreferredSize(buttonSize);
         stockReportBox.setMaximumSize(buttonSize);
-        stockReportBox.setBackground(vrGreen);
-        stockReportBox.setForeground(vrGreen);
+        stockReportBox.setBackground(GUI.vrGreen);
+        stockReportBox.setForeground(GUI.vrGreen);
         JButton stockReportButton = GUI.button("Stock Report", 200, 50, 20);
-        stockReportButton.setBorder(BorderFactory.createLineBorder(vrGreen));
+        stockReportButton.setBorder(BorderFactory.createLineBorder(GUI.vrGreen));
         stockReportButton.setForeground(Color.WHITE);
         stockReportBox.add(stockReportButton);
 
         JPanel bundleBox = new JPanel();
         bundleBox.setPreferredSize(buttonSize);
         bundleBox.setMaximumSize(buttonSize);
-        bundleBox.setBackground(vrGreen);
-        bundleBox.setForeground(vrGreen);
+        bundleBox.setBackground(GUI.vrGreen);
+        bundleBox.setForeground(GUI.vrGreen);
         JButton bundleButton = GUI.button("Bundle", 200, 50, 20);
-        bundleButton.setBorder(BorderFactory.createLineBorder(vrGreen));
+        bundleButton.setBorder(BorderFactory.createLineBorder(GUI.vrGreen));
         bundleButton.setForeground(Color.WHITE);
         bundleBox.add(bundleButton);
 
         JPanel demandAnalysisBox = new JPanel();
         demandAnalysisBox.setPreferredSize(buttonSize);
         demandAnalysisBox.setMaximumSize(buttonSize);
-        demandAnalysisBox.setBackground(vrGreen);
-        demandAnalysisBox.setForeground(vrGreen);
+        demandAnalysisBox.setBackground(GUI.vrGreen);
+        demandAnalysisBox.setForeground(GUI.vrGreen);
         JButton demandAnalysisButton = GUI.button("Demand Analysis", 200, 50, 20);
-        demandAnalysisButton.setBorder(BorderFactory.createLineBorder(vrGreen));
+        demandAnalysisButton.setBorder(BorderFactory.createLineBorder(GUI.vrGreen));
         demandAnalysisButton.setForeground(Color.WHITE);
         demandAnalysisBox.add(demandAnalysisButton);
 
