@@ -12,6 +12,9 @@ import javax.swing.SwingConstants;
 
 public class GUI {
 
+    // Set Green Color based on VR Logo
+    public static Color vrGreen = new Color(2, 175, 116);
+
     // set dimensions of a component
     public static void setDimension(Component component, int w, int h) {
 		component.setMinimumSize(new Dimension(w, h));
