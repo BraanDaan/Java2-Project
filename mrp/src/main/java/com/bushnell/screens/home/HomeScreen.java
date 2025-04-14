@@ -13,6 +13,8 @@ import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.awt.image.RGBImageFilter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -23,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.bushnell.App;
+import com.bushnell.Database;
 import com.bushnell.GUI;
 import com.bushnell.screens.bundle.Bundle;
 import com.bushnell.screens.demandanalysis.DemandAnalysis;
@@ -31,7 +34,11 @@ import com.bushnell.screens.updatestock.UpdateStock;
 
 public class HomeScreen {
 
-    public JPanel MakeGUI() throws IOException {
+    public JPanel MakeGUI(String appDir) throws IOException {
+
+        Path jarPath = Paths.get(appDir);
+        String dbPath = jarPath.getParent().getParent().toString();
+        Database.setDBDirectory(dbPath);
 
         // Create the main panel with a horizontal BoxLayout
         JPanel mainPanel = new JPanel();

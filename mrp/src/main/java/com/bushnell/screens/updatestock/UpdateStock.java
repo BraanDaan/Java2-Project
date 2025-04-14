@@ -22,19 +22,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import static com.bushnell.Database.DBName;
 import com.bushnell.GUI;
 
 public class UpdateStock {
     public static JPanel MakeGUI(JPanel cardPanel) {
         
         // You will need to change this address so that java.sql can locate the database.
-        String databaseLocation = "jdbc:sqlite:C:\\Users\\branm\\OneDrive\\College\\Bushnell2024-2025\\Spring\\SFTE212\\project_repos\\brandon\\Java2-Project\\VR-Factory.db";
+        String databaseLocation = DBName;
 
         // Register the JDBC Driver
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
 
         // Attempt to create a SQL Query to list all strings under the sku column and store them into a dynamic list
@@ -45,7 +45,7 @@ public class UpdateStock {
             Statement statement = connection.createStatement();
         )
         {
-            ResultSet rs = statement.executeQuery("select * from part order by description;");
+            ResultSet rs = statement.executeQuery("select * from part order by sku;");
             while(rs.next())
             {
                 skuTemp.add(rs.getString("sku"));
