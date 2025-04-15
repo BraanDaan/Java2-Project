@@ -38,6 +38,16 @@
       <artifactId>sqlite-jdbc</artifactId>
       <version>3.49.1.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.pdfbox</groupId>
+      <artifactId>pdfbox</artifactId>
+      <version>3.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.pdfbox</groupId>
+      <artifactId>fontbox</artifactId>
+      <version>3.0.4</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -200,6 +210,8 @@
                 <transformer
 	                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
 	                <resource>META-INF/services/java.sql.Driver</resource>
+                  <resource>META-INF/services/pdfbox</resource>
+                  <resource>META-INF/services/fontbox</resource>
                 </transformer>
               </transformers>
             </configuration>
