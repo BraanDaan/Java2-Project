@@ -1,6 +1,6 @@
 *.class
 *.jar
-/mrp/target/*
+mrp/target/*
 .vscode
-/mrp/dependency-reduced-pom.xml
 *.pdf
+mrp/dependency-reduced-pom.xml
