@@ -20,7 +20,12 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import static com.bushnell.Database.DBName;
 import com.bushnell.GUI;
@@ -145,16 +150,27 @@ public class Bundle {
         subTitleBox.setAlignmentY(Component.TOP_ALIGNMENT);
         subTitleBox.add(GUI.text("Subcomponents", 400, 30, 20, Color.BLACK, "center"));
         panel.add(subTitleBox);
-
         panel.add(Box.createRigidArea(new Dimension(0,20)));
+        
+        Box columnBox = Box.createHorizontalBox();
+        String temp = String.format("%-20s\t%-20s\t%-70s\t%-20s", "Stock", "QTY", "Part", "Description");
+        JLabel columnText = GUI.text(temp, 650, 14, 12, Color.BLACK, "left");
+        columnBox.add(columnText);
+        panel.add(columnBox);
+        
         Box subcomponentBox = Box.createVerticalBox();
         subcomponentBox.setAlignmentX(Component.CENTER_ALIGNMENT);
         subcomponentBox.setAlignmentY(Component.TOP_ALIGNMENT);
-        JTextArea subcomponentText = new JTextArea();
+        JTextPane subcomponentText = new JTextPane();
         subcomponentText.setEditable(false);
-        subcomponentBox.add(subcomponentText);
+        StyledDocument doc = subcomponentText.getStyledDocument();
+
+        JScrollPane scrollPane = new JScrollPane(subcomponentText);
+        scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        GUI.setDimension(scrollPane, 650,150);
+
+        subcomponentBox.add(scrollPane);
         panel.add(subcomponentBox);
-        GUI.setDimension(subcomponentText, 850,450);
 
         panel.add(Box.createRigidArea(new Dimension(0,20)));
         Box statusBox = Box.createHorizontalBox();
@@ -169,8 +185,8 @@ public class Bundle {
         skuOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // statusText.setText("");
-                // statusText.setForeground(Color.BLACK);
+                statusText.setText("");
+                statusText.setForeground(Color.BLACK);
                 try
                 (
                     Connection connection = DriverManager.getConnection(databaseLocation);
@@ -184,12 +200,43 @@ public class Bundle {
                         partDescription.setText(rs.getString("description"));
                         partStock.setText(rs.getString("stock"));
                     }
-                    // query = ("SELECT * FROM bom WHERE parent_sku LIKE '" + skuOption.getItemAt(skuOption.getSelectedIndex()) + "';");
-                    // rs = statement.executeQuery(query);
-                    // while(rs.next())
-                    // {
-                    //     subcomponentText.setText(rs.getString(""));
-                    // }
+                    // // get the stock from the child parts
+                    try {
+                        doc.remove(0, doc.getLength());
+                    } catch (BadLocationException g) {
+                        g.printStackTrace();
+                    }
+                    query = ("SELECT * FROM bom WHERE parent_sku='" + skuOption.getItemAt(skuOption.getSelectedIndex()) + "';");
+                    System.out.println(query);
+                    rs = statement.executeQuery(query);
+                    Integer temp = 0;
+                    while(rs.next()){temp++;}
+                    String[] partList = new String[temp];
+                    Integer[] quantityList = new Integer[temp];
+                    temp = 0;
+                    rs = statement.executeQuery(query);
+                    while(rs.next())
+                    {
+                        partList[temp] = rs.getString("sku");
+                        quantityList[temp] = rs.getInt("quantity");
+                        temp++;
+                    }
+                    for (int idx = 0; idx < partList.length; idx++) {
+                        query = ("SELECT * FROM part WHERE sku='" + partList[idx] + "';");
+                        System.out.println(query);
+                        rs = statement.executeQuery(query);
+                        while(rs.next())
+                        {
+                            try {
+                                Style style = doc.addStyle("Style", null);
+                                StyleConstants.setFontFamily(style, "Monospaced");
+                                StyleConstants.setFontSize(style, 12);
+                                doc.insertString(doc.getLength(), String.format("%-5s\t%-5s\t%-30s\t%s\n", rs.getString("stock"), String.valueOf(quantityList[idx]), partList[idx], rs.getString("description")), style);
+                            } catch (BadLocationException f) {
+                                f.printStackTrace();
+                            }
+                        }
+                    }
                 }
                 catch(SQLException f)
                 {
@@ -207,9 +254,103 @@ public class Bundle {
                     Statement statement = connection.createStatement();
                 )
                 {
+                    String query = ("SELECT * FROM bom WHERE parent_sku='" + skuOption.getItemAt(skuOption.getSelectedIndex()) + "';");
+                    System.out.println(query);
+                    ResultSet rs = statement.executeQuery(query);
+                    Integer temp = 0;
+                    while(rs.next()){temp++;}
+                    String[] partList = new String[temp];
+                    Integer[] quantityList = new Integer[temp];
+                    Integer[] stockList = new Integer[temp];
+                    Boolean stop = false;
+                    temp = 0;
+                    rs = statement.executeQuery(query);
+                    while(rs.next())
+                    {
+                        partList[temp] = rs.getString("sku");
+                        quantityList[temp] = rs.getInt("quantity");
+                        temp++;
+                    }
+                    for (int idx = 0; idx < partList.length; idx++) {
+                        query = ("SELECT * FROM part WHERE sku='" + partList[idx] + "';");
+                        System.out.println(query);
+                        rs = statement.executeQuery(query);
+                        while(rs.next())
+                        {
+                            stockList[idx] = rs.getInt("stock");
+                        }
+                    }
+                    for (int idx = 0; idx < partList.length; idx++) {
+                        if (stockList[idx] < quantityList[idx]) {
+                            stop = true;
+                            statusText.setForeground(Color.RED);
+                            statusText.setText("Bundle Failed. One or more parts does not meet the neccessary requirements.");
+                            break;
+                        }
+                    }
+                    if (stop == false) {
+                        
+                        for (int idx = 0; idx < partList.length; idx++) {
+                            query = ("UPDATE part SET stock=" + String.valueOf(stockList[idx] - quantityList[idx]) + " WHERE sku='" + partList[idx] + "';");
+                            System.out.println(query);
+                            statement.executeUpdate(query);
+                        }
+                        query = ("UPDATE part SET stock = stock + 1 WHERE sku='" + skuOption.getItemAt(skuOption.getSelectedIndex()) + "';");
+                        System.out.println(query);
+                        statement.executeUpdate(query);
+
+                        // This is the same action as when you select an option from the drop-down menu.
+                        // Will need to delegate this to a function.
+                        query = ("SELECT * FROM part WHERE sku='" + skuOption.getItemAt(skuOption.getSelectedIndex()) + "';");
+                        rs = statement.executeQuery(query);
+                        while(rs.next())
+                        {
+                            partDescription.setText(rs.getString("description"));
+                            partStock.setText(rs.getString("stock"));
+                        }
+                        try {
+                            doc.remove(0, doc.getLength());
+                        } catch (BadLocationException g) {
+                            g.printStackTrace();
+                        }
+                        query = ("SELECT * FROM bom WHERE parent_sku='" + skuOption.getItemAt(skuOption.getSelectedIndex()) + "';");
+                        System.out.println(query);
+                        rs = statement.executeQuery(query);
+                        temp = 0;
+                        while(rs.next()){temp++;}
+                        partList = new String[temp];
+                        quantityList = new Integer[temp];
+                        temp = 0;
+                        rs = statement.executeQuery(query);
+                        while(rs.next())
+                        {
+                            partList[temp] = rs.getString("sku");
+                            quantityList[temp] = rs.getInt("quantity");
+                            temp++;
+                        }
+                        for (int idx = 0; idx < partList.length; idx++) {
+                            query = ("SELECT * FROM part WHERE sku='" + partList[idx] + "';");
+                            System.out.println(query);
+                            rs = statement.executeQuery(query);
+                            while(rs.next())
+                            {
+                                try {
+                                    Style style = doc.addStyle("Style", null);
+                                    StyleConstants.setFontFamily(style, "Monospaced");
+                                    StyleConstants.setFontSize(style, 12);
+                                    doc.insertString(doc.getLength(), String.format("%-5s\t%-5s\t%-30s\t%s\n", rs.getString("stock"), String.valueOf(quantityList[idx]), partList[idx], rs.getString("description")), style);
+                                } catch (BadLocationException f) {
+                                    f.printStackTrace();
+                                }
+                            }
+                        }
+                        statusText.setForeground(Color.GREEN);
+                        statusText.setText("Bundle Successful!");
+                    }
                 }
                 catch(SQLException f)
                 {
+                    f.printStackTrace();
                 }
             }
         });
